@@ -1,0 +1,29 @@
+{"intents": [
+    {"tag": "greeting",
+     "patterns": ["Hello", "How are you?", "Hi there", "Hi", "Whats up", "Hey", "How is it going?"],
+     "responses": ["Hello, how can I help you?", "Hey, what's the matter?", "Hi, what can I do for you?"]
+    },
+    {"tag": "opening hours",
+     "patterns": ["When are you open?", "What are the opening hours?", "When do you close?", "When do you open?"],
+     "responses": ["The opening hours are 8am-6pm Monday-Saturday."]
+    },
+    {"tag": "contact",
+     "patterns": ["What are the contact details?", "Can you tell me the contact details?", "What is your phone number?",
+    "What is your email address?", "What number can I call you on?"],
+     "responses": ["Phone number: 05970 9336465 -  Email adress: contact@shop.com"]
+    },
+    {"tag": "location",
+     "patterns": ["Where is your business located?", "Where is your store located?", "Where can I find your business?",
+    "Where is your store?", "What is the address of your store?",
+    "What is the address of your business"],
+     "responses": ["Address: Park Road 4, London"]
+    },
+    {"tag": "thank you",
+        "patterns": [ "Thanks", "Thank you!", "Thank your very much!", "I appreciate it!", "Appreciate it!"],
+        "responses": ["You are welcome!", "My pleasure!"]
+    },
+    {"tag": "goodbye",
+     "patterns": [ "bye", "g2g", "see ya", "adios", "cya", "have a nice day"],
+     "responses": ["It was nice speaking to you!", "See you!", "Have a nice day, bye!"]
+    }
+]}
