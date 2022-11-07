@@ -14,7 +14,7 @@ from keras.models import load_model
 
 lemmatizer = WordNetLemmatizer()
 
-# load intents file, words file, tags file, model file
+# load intents, words, tags, model
 intents = json.loads(open('intents.json').read())
 words = pickle.load(open('words.pkl','rb'))
 tags = pickle.load(open('tags.pkl','rb'))
@@ -32,14 +32,14 @@ def bow(sentence, words):
     # pass sentence into tokenize_and_lemmatize function
     sentence_words = tokenize_and_lemmatize(sentence)
 
-    # create bag list with length of words list
+    # create bag with length of words
     bag = [0]*len(words)
 
     # loop through words in tokenized and lemmatized sentence
     for s in sentence_words:
-        # loop through words with related index in words list
+        # loop through words with related index in words
         for i,w in enumerate(words):
-            # if word in sentence is identical to word in words list assign 1 to index of current word
+            # if word in sentence is identical to word in words assign 1 to index of current word
             if w == s:
                 bag[i] = 1
 
@@ -56,22 +56,22 @@ def predict_intent(sentence, model):
     # probability of intent must be at least 75% 
     ERROR_THRESHOLD = 0.75
 
-    # add intent with related index to results list if probability is above treshold
+    # add intent with related index to results if probability is above treshold
     results = [[i,r] for i,r in enumerate(res) if r>ERROR_THRESHOLD]
 
-    # sort results list by strength of probability of intent
+    # sort results by strength of probability of intent
     results.sort(key=lambda x: x[1], reverse=True)
 
-    # create return_list list
+    # create return_list
     return_list = []
 
-    # loop through results in results list
+    # loop through results in results
     for r in results:
-        # append intent category and its probability to return_list list
+        # append intent category and its probability to return_list
         return_list.append({"intent": tags[r[0]], "probability": str(r[1])})
 
-    # if there is no element in return_list list because probability of intents is below treshold
-    # then append intent "noanswer" to return_list list
+    # if there is no element in return_list because probability of intents is below treshold
+    # then append intent "noanswer" to return_list
     if not return_list:
         return_list.append({"intent": "noanswer", "probability": "1"})
 
@@ -91,6 +91,7 @@ def getResponse(ints, intents_json):
         if(i['tag']== tag):
             result = random.choice(i['responses'])
             break
+        
     return result
 
 

@@ -16,14 +16,15 @@ from keras.optimizers import SGD
 
 lemmatizer = WordNetLemmatizer()
 
-# create words list, tags list and documents list
+# create words, tags and documents
 words = []
 tags = []
 documents = []
+
 # create list which includes characters which should be ignored
 ignore_words = [".", ",", ";", "?", "!", "-"]
 
-# open and load intents file
+# open and load intents
 data = open('intents.json').read()
 intents = json.loads(data)
 
@@ -35,14 +36,14 @@ for intent in intents['intents']:
         # example of tokenization: "How are you?" -> ["How", "are", "you", "?"]
         w = nltk.word_tokenize(pattern)
 
-        # add words to words list
+        # add words to words
         words.extend(w)
 
-        # add documents to documents list
+        # add documents to documents
         # example of a document: (["How", "are", "you", "?"], "greeting")
         documents.append((w, intent['tag']))
 
-        # add tags to tags list
+        # add tags to tags
         # examples of tag: "greeting", "location", "opening hours"
         if intent['tag'] not in tags:
             tags.append(intent['tag'])
@@ -50,24 +51,24 @@ for intent in intents['intents']:
 
 # lemmatize each word: create base word to represent related words
 # example of lemmatization: goes, go, going, gone -> go
-# lowercase and check if word is in ignore_words list
+# lowercase and check if word is in ignore_words
 words = [lemmatizer.lemmatize(w.lower()) for w in words if w not in ignore_words]
 
 # create sorted list and delete identical words and tags
 words = sorted(list(set(words)))
 tags = sorted(list(set(tags)))
 
-# convert words list and tags list into pickle files 
+# convert words and tags into pickle files 
 pickle.dump(words,open('words.pkl','wb'))
 pickle.dump(tags,open('tags.pkl','wb'))
 
-# create training list and output list with length of tags list
+# create training and output with length of tags
 training = []
 output_empty = [0] * len(tags)
 
 # loop through documents
 for doc in documents:
-    # create bag of words list
+    # create bag of words
     bag = []
 
     # list of tokenized words
@@ -77,9 +78,9 @@ for doc in documents:
     # lowercase words
     pattern_words = [lemmatizer.lemmatize(word.lower()) for word in pattern_words]
 
-    # loop through words list
+    # loop through words
     for w in words:
-        # append 1 to bag list if word in words list matches word in pattern_words list otherwise append 0
+        # append 1 to bag if word in words matches word in pattern_words otherwise append 0
         # example:
         # words = ["hello", "hi", "hey", "how", "are", "you", "there"]
         # pattern_words = ["hi", "there"]
@@ -94,15 +95,15 @@ for doc in documents:
     output_row = list(output_empty)
     output_row[tags.index(doc[1])] = 1
 
-    # append bag list and output_row list to training list
+    # append bag and output_row to training
     training.append([bag, output_row])
     
 
-# shuffle training list and convert into np array
+# shuffle training and convert into np array
 random.shuffle(training)
 training = np.array(training)
 
-# create train_x list (patterns) and train_y lists (tags)
+# create train_x (patterns) and train_y (tags)
 # example:
 # training = [[[0, 0, 1], [0, 1, 0]], [[1, 0, 0], [1, 1, 0]], [[1, 1, 1], [0, 1, 1]]]
 # train_x = [[0, 0, 1], [1, 0, 0], [1, 1, 1]]
@@ -111,7 +112,9 @@ train_x = list(training[:,0])
 train_y = list(training[:,1])
 
 # create model with 3 layers
-# input layer with 128 neurons, second layer with 64 neurons and output layer with number of neurons equal to number of possible intents
+# input layer with 128 neurons
+# hidden layer with 64 neurons
+# output layer with number of neurons equal to number of possible intents
 model = Sequential()
 model.add(Dense(128, input_shape=(len(train_x[0]),), activation='relu'))
 model.add(Dropout(0.5))
